@@ -44,10 +44,3 @@ Then open `http://127.0.0.1:8000/docs` to test the endpoints.
 - Pydantic
 - OpenAI API
 
-Then:
-
-```bash
-git add README.md
-git commit -m "docs: add README"
-git push
-```
