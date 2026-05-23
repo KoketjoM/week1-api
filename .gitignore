@@ -1,4 +1,32 @@
+# Virtual environment — never commit this
 .venv/
-__pycache__/
-*.pyc
+
+# Secrets — never commit these
 .env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.egg-info/
+dist/
+
+# Data and models
+*.pkl
+*.bin
+data/
+*.csv
+
+# Test fixtures - keep these
+!tests/data/
+!tests/data/*.csv
+!tests/data/*.txt
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

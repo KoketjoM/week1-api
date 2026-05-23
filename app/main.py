@@ -2,10 +2,15 @@ import re
 from collections import Counter
 from datetime import datetime, timezone
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
+from openai import OpenAI
 from pydantic import BaseModel
 
+load_dotenv()
+
 app = FastAPI()
+client = OpenAI()
 
 
 class EchoRequest(BaseModel):
@@ -24,6 +29,15 @@ class AnalyseRequest(BaseModel):
 class AnalyseResponse(BaseModel):
     word_count: int
     top_words: list[tuple[str, int]]
+    timestamp: str
+
+
+class SummariseRequest(BaseModel):
+    text: str
+
+
+class SummariseResponse(BaseModel):
+    summary: str
     timestamp: str
 
 
@@ -47,4 +61,19 @@ def analyse(request: AnalyseRequest) -> AnalyseResponse:
         word_count=len(words),
         top_words=count.most_common(5),
         timestamp=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+@app.post("/Summarise")
+def summarise(request: SummariseRequest) -> SummariseResponse:
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": "Summarise the following text concisely."},
+            {"role": "user", "content": request.text},
+        ],
+    )
+    summary = response.choices[0].message.content or ""
+    return SummariseResponse(
+        summary=summary, timestamp=datetime.now(timezone.utc).isoformat()
     )
